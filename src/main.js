@@ -7,7 +7,7 @@ let config = {
     scene: [Menu, Play],
 };
 
-let keyUP, keyDOWN, keyLEFT, keyRIGHT;
+let keyUP, keyDOWN, keyLEFT, keyRIGHT, keyR;
 
 let borderUISize = config.height / 15;
 let borderPadding = config.height / 7;

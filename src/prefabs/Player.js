@@ -8,14 +8,13 @@ class Player extends Phaser.GameObjects.Sprite {
         
     }
     update() {
-
-        if(keyLEFT.isDown && this.x >= borderUISize + this.width){
+        if(Phaser.Input.Keyboard.JustDown(keyLEFT) && this.x >= borderPadding * 2){
             this.x -= this.moveSpeed;
-        } else if(keyRIGHT.isDown && this.x <= borderUISize + this.width) {
+        } else if(Phaser.Input.Keyboard.JustDown(keyRIGHT) && this.x < game.config.width - borderPadding * 2) {
             this.x += this.moveSpeed; 
-        } else if(keyUP.isDown && this.y <= borderUISize + this.height){
+        } else if(Phaser.Input.Keyboard.JustDown(keyUP) && this.y > borderPadding){
             this.y -= this.moveSpeed;
-        } else if(keyDOWN.isDown && this.y >= borderUISize + this.height) {
+        } else if(Phaser.Input.Keyboard.JustDown(keyDOWN) && this.y < game.config.height - borderPadding * 2) {
             this.y += this.moveSpeed;
         }
         
