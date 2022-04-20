@@ -6,6 +6,7 @@ class Train extends Phaser.GameObjects.Sprite {
         this.direction = direction;
         //UP = 0 RIGHT = 1 DOWN = 2 LEFT = 3
     }
+
     update() {
         if(this.direction = 0) { //Moving UP
             this.y += speed;
@@ -16,5 +17,6 @@ class Train extends Phaser.GameObjects.Sprite {
         } else if(this.direction = 3) {
             this.x -= speed; 
         }
+        //check if the train has gone off the boarder, if so delete
     } 
 }
