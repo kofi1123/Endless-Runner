@@ -11,5 +11,8 @@ class Train extends Phaser.GameObjects.Sprite {
         this.x += this.direction.x * this.moveSpeed;
         this.y += this.direction.y * this.moveSpeed;
         //check if the train has gone off the boarder, if so delete
+        /*if(this.y < config.height * -1){
+            this.destroy();
+        }*/
     } 
 }

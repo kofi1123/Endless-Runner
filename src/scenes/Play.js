@@ -26,20 +26,58 @@ class Play extends Phaser.Scene {
         keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
 
-        let pixelSize = 100;
+        this.pixelSize = 100;
         this.bg = this.add.tileSprite(borderPadding, borderPadding, 700, 500, 'grid').setOrigin(0,0);
-        this.player  = new Player(this, pixelSize * 2 + borderPadding, pixelSize + borderPadding, 'player').setOrigin(0,0);
-        this.train = new Train(this, pixelSize * 3 + borderPadding, pixelSize * 2 + borderPadding, 'train', undefined, 2, {x: 0, y: 1}).setOrigin(0,0);
+        this.player  = new Player(this, this.pixelSize * 2 + borderPadding, this.pixelSize + borderPadding, 'player').setOrigin(0,0);
+        this.trains = this.add.group();
         this.gameOver = false;
+
+        //Systems for timer
+        this.currentTime = 0;
+        this.intervalTIme = 120;
+        this.trainSpeed = 2;
     }
 
     update() {
         if (!this.gameOver) {
             this.player.update();
-            this.train.update();
-            if (this.checkCollision(this.train)) {
-                this.gameOver = true;
+            
+            //Update Trains
+            let trainArr = this.trains.getChildren();
+            for(let i = 0; i < trainArr.length; i++){
+                trainArr[i].update();
+                if(this.checkCollision(trainArr[i])){
+                    this.gameOver = true;
+                }
             }
+
+            //Spawns new trains
+            this.currentTime++;
+            if(this.currentTime >= this.intervalTIme){
+                let dir = Phaser.Math.Between(0, 3);
+                let newTrain;
+                if(dir == 0){
+                    newTrain = new Train(this, this.pixelSize * Phaser.Math.Between(0, 6) + borderPadding, this.pixelSize * -1 + borderPadding, 'train', undefined, this.trainSpeed, {x: 0, y: 1}).setOrigin(0,0);
+                }
+                else if(dir == 1){
+                    newTrain = new Train(this, this.pixelSize * Phaser.Math.Between(0, 6) + borderPadding, this.pixelSize * 7 + borderPadding, 'train', undefined, this.trainSpeed, {x: 0, y: -1}).setOrigin(0,0);
+                }
+                else if(dir == 2){
+                    newTrain = new Train(this, this.pixelSize * -1 + borderPadding, this.pixelSize * Phaser.Math.Between(0, 4) + borderPadding, 'train', undefined, this.trainSpeed, {x: 1, y: 0}).setOrigin(0,0);
+                }
+                else{
+                    newTrain = new Train(this, this.pixelSize * 7 + borderPadding, this.pixelSize * Phaser.Math.Between(0, 4) + borderPadding, 'train', undefined, this.trainSpeed, {x: -1, y: 0}).setOrigin(0,0);
+                }
+                this.trains.add(newTrain);
+                this.currentTime = 0;
+                if(this.intervalTIme > 30){
+                    this.intervalTIme -= 5;
+                }
+                if(this.trainSpeed < 3){
+                    this.trainSpeed += 0.1;
+                }
+            }
+
         }
         else {
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', this.scoreConfig).setOrigin(0.5);
