@@ -26,8 +26,12 @@ class Play extends Phaser.Scene {
         keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
 
+        //Setting up grid
         this.pixelSize = 100;
-        this.bg = this.add.tileSprite(borderPadding, borderPadding, 700, 500, 'grid').setOrigin(0,0);
+        this.gridXSize = 7;
+        this.gridYSize = 5;
+        this.bg = this.add.tileSprite(borderPadding, borderPadding, this.pixelSize * this.gridXSize, this.pixelSize * this.gridYsize, 'grid').setOrigin(0,0);
+
         this.player  = new Player(this, this.pixelSize * 2 + borderPadding, this.pixelSize + borderPadding, 'player').setOrigin(0,0);
         this.trains = this.add.group();
         this.gameOver = false;
@@ -59,25 +63,47 @@ class Play extends Phaser.Scene {
             this.currentTime++;
             if(this.currentTime >= this.intervalTIme){
                 let dir = Phaser.Math.Between(0, 3);
-                let newTrain;
-                if(dir == 0){
-                    newTrain = new Train(this, this.pixelSize * Phaser.Math.Between(0, 6) + borderPadding, this.pixelSize * -1 + borderPadding, 'train', undefined, this.trainSpeed, {x: 0, y: 1}).setOrigin(0,0);
+                let newTrain, xPos, yPos, direction;
+                let xAdd = 0;
+                let yAdd = 0;
+                if(dir == 0){ //From Top
+                    xPos = this.pixelSize * Phaser.Math.Between(0, this.gridXSize - 1) + borderPadding;
+                    yPos = this.pixelSize * -1 + borderPadding;
+                    direction = {x: 0, y: 1};
+                    yAdd = this.pixelSize * -1;
                 }
-                else if(dir == 1){
-                    newTrain = new Train(this, this.pixelSize * Phaser.Math.Between(0, 6) + borderPadding, this.pixelSize * 7 + borderPadding, 'train', undefined, this.trainSpeed, {x: 0, y: -1}).setOrigin(0,0);
+                else if(dir == 1){ //From Bottom
+                    xPos = this.pixelSize * Phaser.Math.Between(0, this.gridXSize - 1) + borderPadding;
+                    yPos = this.pixelSize * this.gridXSize + borderPadding;
+                    direction = {x: 0, y: -1};
+                    yAdd = this.pixelSize * 1;
                 }
-                else if(dir == 2){
-                    newTrain = new Train(this, this.pixelSize * -1 + borderPadding, this.pixelSize * Phaser.Math.Between(0, 4) + borderPadding, 'train', undefined, this.trainSpeed, {x: 1, y: 0}).setOrigin(0,0);
+                else if(dir == 2){ //From Left
+                    xPos = this.pixelSize * -1 + borderPadding;
+                    yPos = this.pixelSize * Phaser.Math.Between(0, this.gridYSize - 1) + borderPadding;
+                    direction = {x: 1, y: 0};
+                    xAdd = this.pixelSize * -1;
                 }
-                else{
-                    newTrain = new Train(this, this.pixelSize * 7 + borderPadding, this.pixelSize * Phaser.Math.Between(0, 4) + borderPadding, 'train', undefined, this.trainSpeed, {x: -1, y: 0}).setOrigin(0,0);
+                else{ //From Right
+                    xPos = this.pixelSize * this.gridXSize + borderPadding;
+                    yPos = this.pixelSize * Phaser.Math.Between(0, this.gridYSize - 1) + borderPadding;
+                    direction = {x: -1, y: 0};
+                    xAdd = this.pixelSize * 1;
                 }
+
+                newTrain = new Train(this, xPos, yPos, 'train', undefined, this.trainSpeed, direction).setOrigin(0,0);
+                let trainSize = Phaser.Math.Between(2, 4);
+                for(let i = 1; i < trainSize; i++){
+                    let segTrain = new Train(this, xPos + (xAdd * i), yPos + (yAdd * i), 'train', undefined, this.trainSpeed, direction).setOrigin(0,0);
+                    this.trains.add(segTrain);
+                }
+                
                 this.trains.add(newTrain);
                 this.currentTime = 0;
                 if(this.intervalTIme > 30){
                     this.intervalTIme -= 5;
                 }
-                if(this.trainSpeed < 3){
+                if(this.trainSpeed < 5){
                     this.trainSpeed += 0.1;
                 }
             }
