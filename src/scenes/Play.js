@@ -49,6 +49,10 @@ class Play extends Phaser.Scene {
                 if(this.checkCollision(trainArr[i])){
                     this.gameOver = true;
                 }
+                if(this.outOfBounds(trainArr[i])){
+                    this.trains.remove(trainArr[i]);
+                    trainArr[i].destroy();
+                }
             }
 
             //Spawns new trains
@@ -105,5 +109,13 @@ class Play extends Phaser.Scene {
         else {
             return false;
         }
+    }
+
+    outOfBounds(train){
+        if(train.x > config.width * 2 || train.x < config.width * -2 
+            || train.y > config.height * 2 || train.y < config.height * -2){
+                return true;
+        }
+        return false;
     }
 }
