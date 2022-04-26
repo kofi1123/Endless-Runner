@@ -30,6 +30,7 @@ class Play extends Phaser.Scene {
         this.pixelSize = 100;
         this.gridXSize = 7;
         this.gridYSize = 5;
+        this.add.rectangle(0, 0, game.config.width, game.config.height, 0xF5F5DC).setOrigin(0, 0);
         this.bg = this.add.tileSprite(borderPadding, borderPadding, this.pixelSize * this.gridXSize, this.pixelSize * this.gridYsize, 'grid').setOrigin(0,0);
 
         this.player  = new Player(this, this.pixelSize * 2 + borderPadding, this.pixelSize + borderPadding, 'player').setOrigin(0,0);
@@ -40,12 +41,15 @@ class Play extends Phaser.Scene {
         this.currentTime = 0;
         this.intervalTIme = 120;
         this.trainSpeed = 2;
+        this.time = 0;
+        this.timeRight = this.add.text(game.config.width - (borderPadding*2), borderPadding * 0.5,"Score: " + Math.floor(this.time / 1000), this.scoreConfig).setOrigin(0.5);
     }
 
-    update() {
+    update(time, delta) {
         if (!this.gameOver) {
             this.player.update();
-            
+            this.timeRight.text = "Score: " + Math.floor(this.time / 10);
+            this.time += delta
             //Update Trains
             let trainArr = this.trains.getChildren();
             for(let i = 0; i < trainArr.length; i++){
