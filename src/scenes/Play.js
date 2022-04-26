@@ -30,7 +30,7 @@ class Play extends Phaser.Scene {
         this.pixelSize = 100;
         this.gridXSize = 7;
         this.gridYSize = 5;
-        this.add.rectangle(0, 0, game.config.width, game.config.height, 0xF5F5DC).setOrigin(0, 0);
+        this.add.rectangle(0, 0, game.config.width, game.config.height, 0xd6b081).setOrigin(0, 0);
         this.bg = this.add.tileSprite(borderPadding, borderPadding, this.pixelSize * this.gridXSize, this.pixelSize * this.gridYsize, 'grid').setOrigin(0,0);
 
         this.player  = new Player(this, this.pixelSize * 2 + borderPadding, this.pixelSize + borderPadding, 'player').setOrigin(0,0);
