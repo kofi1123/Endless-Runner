@@ -79,6 +79,7 @@ class Play extends Phaser.Scene {
                 let yAdd = 0;
                 let foundTrain = true;
                 do {
+                    dir = Phaser.Math.Between(0, 3);
                     foundTrain = true;
                     if(dir == 0){ //From Top
                         xPos = this.pixelSize * Phaser.Math.Between(0, this.gridXSize - 1) + borderPadding;
@@ -107,27 +108,31 @@ class Play extends Phaser.Scene {
                     for(let currentTrain of trainArr){
                         if(dir == 0){ //from top check against bottom
                             if(xPos == currentTrain.x && direction.y == currentTrain.direction.y){
+                                console.log("invalid train top");
                                 foundTrain = false;
                                 break;
                             }
                         } else if(dir == 1) { //from bottom check against top
                             if(xPos == currentTrain.x && direction.y == currentTrain.direction.y){
+                                console.log("invalid train bottom");
                                 foundTrain = false;
                                 break;
                             }
                         } else if(dir == 2){ //from left check against right
                             if(yPos == currentTrain.y && direction.x == currentTrain.direction.x){
+                                console.log("invalid train left");
                                 foundTrain = false;
                                 break;
                             }
                         } else { //from right check against left
                             if(yPos == currentTrain.y && direction.x == currentTrain.direction.x){
+                                console.log("invalid train right");
                                 foundTrain = false;
                                 break;
                             }
                         }
                     }
-                    //console.log("bottom of Do-while");
+                    console.log("bottom of Do-while");
                 } while (!foundTrain);
 
                 newTrain = new Train(this, xPos, yPos, 'train', undefined, this.trainSpeed + rand, direction).setOrigin(0,0);
