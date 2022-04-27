@@ -36,7 +36,7 @@ class Play extends Phaser.Scene {
 
         this.player  = new Player(this, this.pixelSize * 2 + borderPadding, this.pixelSize + borderPadding, 'player').setOrigin(0,0);
         this.trains = this.add.group();
-        this.coin = new Coin(this,Phaser.Math.Between(1,7) * 100, Phaser.Math.Between(1,5) * 100, 'coin');
+        this.coin = new Coin(this,Phaser.Math.Between(1,7) * 100, Phaser.Math.Between(1,5) * 100, 'coin', undefined ,100000).setOrigin(0,0);
         this.gameOver = false;
 
         //Systems for timer
@@ -51,7 +51,7 @@ class Play extends Phaser.Scene {
         if (!this.gameOver) {
             this.player.update();
             let increment = 60/(1000/delta);
-            console.log("increment: " + delta);
+            //console.log("increment: " + delta);
             let rand = Math.random() * 1.5;
             this.timeRight.text = "Score: " + Math.floor(this.time / 10);
             this.time += delta;
@@ -181,7 +181,9 @@ class Play extends Phaser.Scene {
             this.player.x + this.player.width - 25 > coin.x &&
             this.player.y < coin.y + coin.height - 25 &&
             this.player.height - 25 + this.player.y > coin.y) {
+                console.log("time before = " + this.time);
                 this.time += coin.scoreValue;
+                console.log("time after  = " + this.time);
                 coin.x = Phaser.Math.Between(1,7) * 100;
                 coin.y = Phaser.Math.Between(1,5) * 100;
                 return true;
