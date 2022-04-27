@@ -33,7 +33,7 @@ class Play extends Phaser.Scene {
         this.add.rectangle(0, 0, game.config.width, game.config.height, 0xd6b081).setOrigin(0, 0);
         this.bg = this.add.tileSprite(borderPadding, borderPadding, this.pixelSize * this.gridXSize, this.pixelSize * this.gridYsize, 'grid').setOrigin(0,0);
 
-        this.player  = new Player(this, this.pixelSize * 2 + borderPadding, this.pixelSize + borderPadding, 'player').setOrigin(0,0);
+        this.player  = new Player(this, this.pixelSize + borderPadding * 2.5, this.pixelSize + borderPadding * 2.5, 'player').setOrigin(0.5);
         this.trains = this.add.group();
         this.gameOver = false;
 
@@ -49,9 +49,8 @@ class Play extends Phaser.Scene {
         if (!this.gameOver) {
             this.player.update();
             let increment = 60/(1000/delta);
-            console.log("increment: " + delta);
             let rand = Math.random() * 1.5;
-            this.timeRight.text = "Scoe: " + Math.floor(this.time / 10);
+            this.timeRight.text = "Score: " + Math.floor(this.time / 10);
             this.time += delta;
             //Update Trains
             let trainArr = this.trains.getChildren();
@@ -162,10 +161,10 @@ class Play extends Phaser.Scene {
     }
 
     checkCollision(train) {
-        if (this.player.x < train.x + train.width - 25 &&
-            this.player.x + this.player.width - 25 > train.x &&
-            this.player.y < train.y + train.height - 25 &&
-            this.player.height - 25 + this.player.y > train.y) {
+        if (this.player.x - 50 < train.x + train.width - 25 &&
+            this.player.x + this.player.width*.5 - 25 > train.x &&
+            this.player.y - 50 < train.y + train.height - 25 &&
+            this.player.height * .5 - 25 + this.player.y > train.y) {
                 return true;
         }
         else {
