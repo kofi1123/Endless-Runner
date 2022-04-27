@@ -48,13 +48,14 @@ class Play extends Phaser.Scene {
     update(time, delta) {
         if (!this.gameOver) {
             this.player.update();
+            let increment = 60/(1000/delta);
             let rand = Math.random() * 1.5;
             this.timeRight.text = "Score: " + Math.floor(this.time / 10);
             this.time += delta;
             //Update Trains
             let trainArr = this.trains.getChildren();
             for(let i = 0; i < trainArr.length; i++){
-                trainArr[i].update(time, delta);
+                trainArr[i].update(time, increment);
                 if(this.checkCollision(trainArr[i])){
                     this.gameOver = true;
                 }
@@ -65,7 +66,7 @@ class Play extends Phaser.Scene {
             }
 
             //Spawns new trains
-            this.currentTime++;
+            this.currentTime += increment;
             if(this.currentTime >= this.intervalTIme){
 
                 let dir = Phaser.Math.Between(0, 3);
