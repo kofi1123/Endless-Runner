@@ -51,7 +51,7 @@ class Play extends Phaser.Scene {
             let increment = 60/(1000/delta);
             console.log("increment: " + increment);
             let rand = Math.random() * 1.5;
-            this.timeRight.text = "Score: " + Math.floor(this.time / 10);
+            this.timeRight.text = "Scoe: " + Math.floor(this.time / 10);
             this.time += delta;
             //Update Trains
             let trainArr = this.trains.getChildren();
