@@ -6,6 +6,7 @@ class Play extends Phaser.Scene {
         this.load.image('grid', './assets/images/grid.png');
         this.load.image('player', './assets/images/spr_playerPlaceholder.png');
         this.load.image('train', './assets/images/spr_trainPlaceholder.png');
+        this.load.image('coin', './assets/images/spr_coinPlaceholder.png');
     }
     create() {
         this.scoreConfig = {
@@ -35,6 +36,7 @@ class Play extends Phaser.Scene {
 
         this.player  = new Player(this, this.pixelSize + borderPadding * 2.5, this.pixelSize + borderPadding * 2.5, 'player').setOrigin(0.5);
         this.trains = this.add.group();
+        this.coin = new Coin(this,Phaser.Math.Between(1,7) * 100, Phaser.Math.Between(1,5) * 100, 'coin', undefined ,100000).setOrigin(0,0);
         this.gameOver = false;
 
         //Systems for timer
@@ -49,6 +51,7 @@ class Play extends Phaser.Scene {
         if (!this.gameOver) {
             this.player.update();
             let increment = 60/(1000/delta);
+            //console.log("increment: " + delta);
             let rand = Math.random() * 1.5;
             this.timeRight.text = "Score: " + Math.floor(this.time / 10);
             this.time += delta;
@@ -64,7 +67,8 @@ class Play extends Phaser.Scene {
                     trainArr[i].destroy();
                 }
             }
-
+            //Check coin collison
+            this.checkCollisionCoin(this.coin);
             //Spawns new trains
             this.currentTime += increment;
             if(this.currentTime >= this.intervalTIme){
@@ -102,22 +106,22 @@ class Play extends Phaser.Scene {
                     }
                     for(let currentTrain of trainArr){
                         if(dir == 0){ //from top check against bottom
-                            if(xPos == currentTrain.x && direction.y != currentTrain.direction.y){
+                            if(xPos == currentTrain.x && direction.y == currentTrain.direction.y){
                                 foundTrain = false;
                                 break;
                             }
                         } else if(dir == 1) { //from bottom check against top
-                            if(xPos == currentTrain.x && direction.y != currentTrain.direction.y){
+                            if(xPos == currentTrain.x && direction.y == currentTrain.direction.y){
                                 foundTrain = false;
                                 break;
                             }
                         } else if(dir == 2){ //from left check against right
-                            if(yPos == currentTrain.y && direction.x != currentTrain.direction.x){
+                            if(yPos == currentTrain.y && direction.x == currentTrain.direction.x){
                                 foundTrain = false;
                                 break;
                             }
                         } else { //from right check against left
-                            if(yPos == currentTrain.y && direction.x != currentTrain.direction.x){
+                            if(yPos == currentTrain.y && direction.x == currentTrain.direction.x){
                                 foundTrain = false;
                                 break;
                             }
@@ -161,6 +165,23 @@ class Play extends Phaser.Scene {
             this.player.x + this.player.width*.5 - 25 > train.x &&
             this.player.y - 50 < train.y + train.height - 25 &&
             this.player.height * .5 - 25 + this.player.y > train.y) {
+                return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    checkCollisionCoin(coin) {
+        if (this.player.x < coin.x + coin.width - 25 &&
+            this.player.x + this.player.width - 25 > coin.x &&
+            this.player.y < coin.y + coin.height - 25 &&
+            this.player.height - 25 + this.player.y > coin.y) {
+                console.log("time before = " + this.time);
+                this.time += coin.scoreValue;
+                console.log("time after  = " + this.time);
+                coin.x = Phaser.Math.Between(1,7) * 100;
+                coin.y = Phaser.Math.Between(1,5) * 100;
                 return true;
         }
         else {
