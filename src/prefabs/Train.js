@@ -9,7 +9,7 @@ class Train extends Phaser.GameObjects.Sprite {
 
     update(time, delta) {
         if (this.time < 1) {
-            this.time -= 10;
+            this.time -= 1;
             this.x += this.direction.x * this.moveSpeed;
             this.y += this.direction.y * this.moveSpeed;
         }
