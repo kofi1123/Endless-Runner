@@ -123,7 +123,6 @@ class Play extends Phaser.Scene {
                             }
                         }
                     }
-                    //console.log("bottom of Do-while");
                 } while (!foundTrain);
 
                 newTrain = new Train(this, xPos, yPos, 'train', undefined, this.trainSpeed + rand, direction).setOrigin(0,0);
@@ -155,9 +154,6 @@ class Play extends Phaser.Scene {
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start("menu");
         }
-        /*if (this.checkCollision(this.train)) {
-            this.gameOver = true;
-        }*/
     }
 
     checkCollision(train) {
