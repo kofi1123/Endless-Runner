@@ -49,7 +49,7 @@ class Play extends Phaser.Scene {
         if (!this.gameOver) {
             this.player.update();
             let increment = 60/(1000/delta);
-            console.log("increment: " + increment);
+            console.log("increment: " + delta);
             let rand = Math.random() * 1.5;
             this.timeRight.text = "Scoe: " + Math.floor(this.time / 10);
             this.time += delta;
