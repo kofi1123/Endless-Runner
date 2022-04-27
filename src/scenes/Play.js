@@ -50,7 +50,7 @@ class Play extends Phaser.Scene {
             this.player.update();
             let rand = Math.random() * 1.5;
             this.timeRight.text = "Score: " + Math.floor(this.time / 10);
-            this.time += delta
+            this.time += delta;
             //Update Trains
             let trainArr = this.trains.getChildren();
             for(let i = 0; i < trainArr.length; i++){
@@ -130,6 +130,7 @@ class Play extends Phaser.Scene {
                 for(let i = 1; i < trainSize; i++){
                     let segTrain = new Train(this, xPos + (xAdd * i), yPos + (yAdd * i), 'train', undefined, this.trainSpeed + rand, direction).setOrigin(0,0);
                     this.trains.add(segTrain);
+                    console.log(this.trainSpeed);
                 }
                 
                 this.trains.add(newTrain);
