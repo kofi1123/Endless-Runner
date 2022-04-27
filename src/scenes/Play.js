@@ -103,22 +103,22 @@ class Play extends Phaser.Scene {
                     }
                     for(let currentTrain of trainArr){
                         if(dir == 0){ //from top check against bottom
-                            if(xPos == currentTrain.x && direction.y != currentTrain.direction.y){
+                            if(xPos == currentTrain.x && direction.y == currentTrain.direction.y){
                                 foundTrain = false;
                                 break;
                             }
                         } else if(dir == 1) { //from bottom check against top
-                            if(xPos == currentTrain.x && direction.y != currentTrain.direction.y){
+                            if(xPos == currentTrain.x && direction.y == currentTrain.direction.y){
                                 foundTrain = false;
                                 break;
                             }
                         } else if(dir == 2){ //from left check against right
-                            if(yPos == currentTrain.y && direction.x != currentTrain.direction.x){
+                            if(yPos == currentTrain.y && direction.x == currentTrain.direction.x){
                                 foundTrain = false;
                                 break;
                             }
                         } else { //from right check against left
-                            if(yPos == currentTrain.y && direction.x != currentTrain.direction.x){
+                            if(yPos == currentTrain.y && direction.x == currentTrain.direction.x){
                                 foundTrain = false;
                                 break;
                             }
