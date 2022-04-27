@@ -48,6 +48,8 @@ class Play extends Phaser.Scene {
     update(time, delta) {
         if (!this.gameOver) {
             this.player.update();
+
+            let rand = Math.random() * 1.5;
             this.timeRight.text = "Score: " + Math.floor(this.time / 10);
             this.time += delta
             //Update Trains
@@ -95,10 +97,10 @@ class Play extends Phaser.Scene {
                     xAdd = this.pixelSize * 1;
                 }
 
-                newTrain = new Train(this, xPos, yPos, 'train', undefined, this.trainSpeed, direction).setOrigin(0,0);
+                newTrain = new Train(this, xPos, yPos, 'train', undefined, this.trainSpeed + rand, direction).setOrigin(0,0);
                 let trainSize = Phaser.Math.Between(2, 4);
                 for(let i = 1; i < trainSize; i++){
-                    let segTrain = new Train(this, xPos + (xAdd * i), yPos + (yAdd * i), 'train', undefined, this.trainSpeed, direction).setOrigin(0,0);
+                    let segTrain = new Train(this, xPos + (xAdd * i), yPos + (yAdd * i), 'train', undefined, this.trainSpeed + rand, direction).setOrigin(0,0);
                     this.trains.add(segTrain);
                 }
                 
