@@ -54,7 +54,7 @@ class Play extends Phaser.Scene {
             //Update Trains
             let trainArr = this.trains.getChildren();
             for(let i = 0; i < trainArr.length; i++){
-                trainArr[i].update();
+                trainArr[i].update(time, delta);
                 if(this.checkCollision(trainArr[i])){
                     this.gameOver = true;
                 }
@@ -130,7 +130,6 @@ class Play extends Phaser.Scene {
                 for(let i = 1; i < trainSize; i++){
                     let segTrain = new Train(this, xPos + (xAdd * i), yPos + (yAdd * i), 'train', undefined, this.trainSpeed + rand, direction).setOrigin(0,0);
                     this.trains.add(segTrain);
-                    console.log(this.trainSpeed);
                 }
                 
                 this.trains.add(newTrain);
