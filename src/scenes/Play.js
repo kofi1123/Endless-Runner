@@ -44,11 +44,10 @@ class Play extends Phaser.Scene {
         this.time = 0;
         this.timeRight = this.add.text(game.config.width - (borderPadding*2), borderPadding * 0.5,"Score: " + Math.floor(this.time / 1000), this.scoreConfig).setOrigin(0.5);
     }
-
+    
     update(time, delta) {
         if (!this.gameOver) {
             this.player.update();
-
             let rand = Math.random() * 1.5;
             this.timeRight.text = "Score: " + Math.floor(this.time / 10);
             this.time += delta
@@ -68,34 +67,63 @@ class Play extends Phaser.Scene {
             //Spawns new trains
             this.currentTime++;
             if(this.currentTime >= this.intervalTIme){
+
                 let dir = Phaser.Math.Between(0, 3);
                 let newTrain, xPos, yPos, direction;
                 let xAdd = 0;
                 let yAdd = 0;
-                if(dir == 0){ //From Top
-                    xPos = this.pixelSize * Phaser.Math.Between(0, this.gridXSize - 1) + borderPadding;
-                    yPos = this.pixelSize * -1 + borderPadding;
-                    direction = {x: 0, y: 1};
-                    yAdd = this.pixelSize * -1;
-                }
-                else if(dir == 1){ //From Bottom
-                    xPos = this.pixelSize * Phaser.Math.Between(0, this.gridXSize - 1) + borderPadding;
-                    yPos = this.pixelSize * this.gridXSize + borderPadding;
-                    direction = {x: 0, y: -1};
-                    yAdd = this.pixelSize * 1;
-                }
-                else if(dir == 2){ //From Left
-                    xPos = this.pixelSize * -1 + borderPadding;
-                    yPos = this.pixelSize * Phaser.Math.Between(0, this.gridYSize - 1) + borderPadding;
-                    direction = {x: 1, y: 0};
-                    xAdd = this.pixelSize * -1;
-                }
-                else{ //From Right
-                    xPos = this.pixelSize * this.gridXSize + borderPadding;
-                    yPos = this.pixelSize * Phaser.Math.Between(0, this.gridYSize - 1) + borderPadding;
-                    direction = {x: -1, y: 0};
-                    xAdd = this.pixelSize * 1;
-                }
+                let foundTrain = true;
+                do {
+                    foundTrain = true;
+                    if(dir == 0){ //From Top
+                        xPos = this.pixelSize * Phaser.Math.Between(0, this.gridXSize - 1) + borderPadding;
+                        yPos = this.pixelSize * -1 + borderPadding;
+                        direction = {x: 0, y: 1};
+                        yAdd = this.pixelSize * -1;
+                    }
+                    else if(dir == 1){ //From Bottom
+                        xPos = this.pixelSize * Phaser.Math.Between(0, this.gridXSize - 1) + borderPadding;
+                        yPos = this.pixelSize * this.gridXSize + borderPadding;
+                        direction = {x: 0, y: -1};
+                        yAdd = this.pixelSize * 1;
+                    }
+                    else if(dir == 2){ //From Left
+                        xPos = this.pixelSize * -1 + borderPadding;
+                        yPos = this.pixelSize * Phaser.Math.Between(0, this.gridYSize - 1) + borderPadding;
+                        direction = {x: 1, y: 0};
+                        xAdd = this.pixelSize * -1;
+                    }
+                    else{ //From Right
+                        xPos = this.pixelSize * this.gridXSize + borderPadding;
+                        yPos = this.pixelSize * Phaser.Math.Between(0, this.gridYSize - 1) + borderPadding;
+                        direction = {x: -1, y: 0};
+                        xAdd = this.pixelSize * 1;
+                    }
+                    for(let currentTrain of trainArr){
+                        if(dir == 0){ //from top check against bottom
+                            if(xPos == currentTrain.x && direction.y != currentTrain.direction.y){
+                                foundTrain = false;
+                                break;
+                            }
+                        } else if(dir == 1) { //from bottom check against top
+                            if(xPos == currentTrain.x && direction.y != currentTrain.direction.y){
+                                foundTrain = false;
+                                break;
+                            }
+                        } else if(dir == 2){ //from left check against right
+                            if(yPos == currentTrain.y && direction.x != currentTrain.direction.x){
+                                foundTrain = false;
+                                break;
+                            }
+                        } else { //from right check against left
+                            if(yPos == currentTrain.y && direction.x != currentTrain.direction.x){
+                                foundTrain = false;
+                                break;
+                            }
+                        }
+                    }
+                    //console.log("bottom of Do-while");
+                } while (!foundTrain);
 
                 newTrain = new Train(this, xPos, yPos, 'train', undefined, this.trainSpeed + rand, direction).setOrigin(0,0);
                 let trainSize = Phaser.Math.Between(2, 4);
