@@ -5,6 +5,10 @@ let config = {
     width: 900,
     height: 700,
     scene: [Menu, Play],
+    fps: {
+        target: 60,
+        forceSetTimeOut: true
+    }
 };
 
 let keyUP, keyDOWN, keyLEFT, keyRIGHT, keyR;
