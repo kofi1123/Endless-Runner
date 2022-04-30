@@ -106,7 +106,7 @@ class Play extends Phaser.Scene {
         let x = Phaser.Math.Between(1,7) * 100;
         let y = Phaser.Math.Between(1,5) * 100;
         this.rotate = this.add.sprite(x, y, 'coinrotate').setOrigin(0, 0);
-        this.coin = new Coin(this, x, y, 'coinrotate', undefined ,100000, this.rotate).setOrigin(0,0);
+        this.coin = new Coin(this, x, y, 'coinrotate', undefined ,5000, this.rotate).setOrigin(0,0);
         this.gameOver = false;
         this.bgLayer = this.add.layer([this.bgUI, this.bg]);
         this.bgLayer.setDepth(0);
@@ -134,7 +134,7 @@ class Play extends Phaser.Scene {
             this.player.update();
             let increment = 60/(1000/delta);
             let rand = Math.random() * 1.5;
-            this.timeRight.text = "Score: " + Math.floor(this.timer / 10);
+            this.timeRight.text = "Score: " + Math.floor(this.timer);
             this.timer += delta;
             //Update Trains
             let trainArr = this.trains.getChildren();
