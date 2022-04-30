@@ -7,6 +7,7 @@ class Play extends Phaser.Scene {
         this.load.image('player', './assets/images/spr_playerPlaceholder.png');
         this.load.image('train', './assets/images/spr_trainPlaceholder.png');
         this.load.image('coin', './assets/images/spr_coinPlaceholder.png');
+        this.load.spritesheet('coinrotate', './assets/images/CoinSpriteSheet.png', {frameWidth: 100, frameHeight: 100, startFrame: 0, endFrame: 3});
     }
     create() {
         this.scoreConfig = {
@@ -20,6 +21,13 @@ class Play extends Phaser.Scene {
                 bottom: 5,
             },
         }
+
+        this.anims.create({
+            key: 'coinrotate',
+            frames: this.anims.generateFrameNumbers('coinrotate', {start: 0, end: 3, first: 0}),
+            frameRate: 10,
+            repeat: -1
+        });
 
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -36,7 +44,10 @@ class Play extends Phaser.Scene {
 
         this.player  = new Player(this, this.pixelSize * 2 + borderPadding, this.pixelSize + borderPadding, 'player').setOrigin(0,0);
         this.trains = this.add.group();
-        this.coin = new Coin(this,Phaser.Math.Between(1,7) * 100, Phaser.Math.Between(1,5) * 100, 'coin', undefined ,100000).setOrigin(0,0);
+        let x = Phaser.Math.Between(1,7) * 100;
+        let y = Phaser.Math.Between(1,5) * 100;
+        this.rotate = this.add.sprite(x, y, 'coinrotate').setOrigin(0, 0);
+        this.coin = new Coin(this, x, y, 'coin', undefined ,100000, this.rotate).setOrigin(0,0);
         this.gameOver = false;
 
         //Systems for timer
@@ -186,11 +197,11 @@ class Play extends Phaser.Scene {
             this.player.x + this.player.width - 25 > coin.x &&
             this.player.y < coin.y + coin.height - 25 &&
             this.player.height - 25 + this.player.y > coin.y) {
-                console.log("time before = " + this.time);
                 this.time += coin.scoreValue;
-                console.log("time after  = " + this.time);
                 coin.x = Phaser.Math.Between(1,7) * 100;
                 coin.y = Phaser.Math.Between(1,5) * 100;
+                coin.animation.x = coin.x;
+                coin.animation.y = coin.y;
                 return true;
         }
         else {

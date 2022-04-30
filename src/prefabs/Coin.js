@@ -1,8 +1,9 @@
 class Coin extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y, texture, frame, scoreValue) {
+    constructor(scene, x, y, texture, frame, scoreValue, animation) {
         super(scene, x, y, texture, frame);
-        scene.add.existing(this);
         this.scoreValue = scoreValue;
+        this.animation = animation;
+        animation.anims.play('coinrotate');
     }
 
 }
