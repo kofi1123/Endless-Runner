@@ -3,7 +3,7 @@ class Menu extends Phaser.Scene {
         super("menu");
     }
     preload() {
-
+        this.load.audio('sfx_menuClick', './assets/sound/sfx_menuClick.mp3');
     }
     create(){
         let menuConfig = {
@@ -30,6 +30,7 @@ class Menu extends Phaser.Scene {
     }
     update() {
         if (Phaser.Input.Keyboard.JustDown(keyLEFT) || Phaser.Input.Keyboard.JustDown(keyRIGHT)) {
+            this.sound.play('sfx_menuClick');
             this.scene.start('play');    
         }
     }

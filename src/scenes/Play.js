@@ -8,6 +8,13 @@ class Play extends Phaser.Scene {
         this.load.image('train', './assets/images/spr_trainPlaceholder.png');
         this.load.image('coin', './assets/images/spr_coinPlaceholder.png');
         this.load.spritesheet('coinrotate', './assets/images/CoinSpriteSheet.png', {frameWidth: 100, frameHeight: 100, startFrame: 0, endFrame: 3});
+        this.load.audio('sfx_music', './assets/sound/sfx_music.mp3');
+        this.load.audio('sfx_coin', './assets/sound/sfx_coin.mp3');
+        this.load.audio('sfx_gameOver', './assets/sound/sfx_gameOver.mp3');
+        this.load.audio('sfx_playerMoveDown', './assets/sound/sfx_playerMoveDown.mp3');
+        this.load.audio('sfx_playerMoveUp', './assets/sound/sfx_playerMoveUp.mp3');
+        this.load.audio('sfx_playerMoveRight', './assets/sound/sfx_playerMoveRight.mp3');
+        this.load.audio('sfx_playerMoveLeft', './assets/sound/sfx_playerMoveLeft.mp3');
     }
     create() {
         this.scoreConfig = {
@@ -50,6 +57,9 @@ class Play extends Phaser.Scene {
         this.coin = new Coin(this, x, y, 'coin', undefined ,100000, this.rotate).setOrigin(0,0);
         this.gameOver = false;
 
+        this.bgSound = this.sound.add('sfx_music', {loop: true});
+        this.bgSound.play();
+
         //Systems for timer
         this.currentTime = 0;
         this.intervalTIme = 120;
@@ -62,7 +72,6 @@ class Play extends Phaser.Scene {
         if (!this.gameOver) {
             this.player.update();
             let increment = 60/(1000/delta);
-            //console.log("increment: " + delta);
             let rand = Math.random() * 1.5;
             this.timeRight.text = "Score: " + Math.floor(this.time / 10);
             this.time += delta;
@@ -167,6 +176,7 @@ class Play extends Phaser.Scene {
         else {
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', this.scoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', this.scoreConfig).setOrigin(0.5);
+            this.bgSound.stop();
             this.gameOver = true;
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
@@ -175,9 +185,6 @@ class Play extends Phaser.Scene {
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start("menu");
         }
-        /*if (this.checkCollision(this.train)) {
-            this.gameOver = true;
-        }*/
     }
 
     checkCollision(train) {
@@ -185,6 +192,7 @@ class Play extends Phaser.Scene {
             this.player.x + this.player.width - 25 > train.x &&
             this.player.y < train.y + train.height - 25 &&
             this.player.height - 25 + this.player.y > train.y) {
+                this.sound.play('sfx_gameOver');
                 return true;
         }
         else {
@@ -202,6 +210,7 @@ class Play extends Phaser.Scene {
                 coin.y = Phaser.Math.Between(1,5) * 100;
                 coin.animation.x = coin.x;
                 coin.animation.y = coin.y;
+                this.sound.play('sfx_coin');
                 return true;
         }
         else {
