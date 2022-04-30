@@ -309,8 +309,16 @@ class Play extends Phaser.Scene {
             this.player.y < coin.y + coin.height - 25 &&
             this.player.height - 25 + this.player.y > coin.y) {
                 this.timer += coin.scoreValue;
-                coin.x = Phaser.Math.Between(1,7) * 100;
-                coin.y = Phaser.Math.Between(1,5) * 100;
+                if(this.player.x >= 400){
+                    coin.x = Phaser.Math.Between(1,3) * 100;
+                } else {
+                    coin.x = Phaser.Math.Between(4,7) * 100;
+                }
+                if(this.player.y >= 400){
+                    coin.y = Phaser.Math.Between(1,3) * 100;
+                } else {
+                    coin.y = Phaser.Math.Between(4,5) * 100;
+                }
                 coin.animation.x = coin.x;
                 coin.animation.y = coin.y;
                 this.sound.play('sfx_coin');
