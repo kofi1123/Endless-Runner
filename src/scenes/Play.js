@@ -4,8 +4,13 @@ class Play extends Phaser.Scene {
     }
     preload () {
         this.load.image('grid', './assets/images/grid.png');
-        this.load.image('player', './assets/images/spr_playerPlaceholder.png');
-        this.load.image('train', './assets/images/spr_trainPlaceholder.png');
+        this.load.image('player', './assets/images/player.png');
+        this.load.image('redEndObj', './assets/images/redEndObj.png');
+        this.load.image('redMiddleObj', './assets/images/redMiddleObj.png');
+        this.load.image('blueEndObj', './assets/images/blueEndObj.png');
+        this.load.image('blueMiddleObj', './assets/images/blueMiddleObj.png');
+        this.load.image('yellowEndObj', './assets/images/yellowEndObj.png');
+        this.load.image('yellowMiddleObj', './assets/images/yellowMiddleObj.png');
         this.load.image('coin', './assets/images/spr_coinPlaceholder.png');
         this.load.spritesheet('coinrotate', './assets/images/CoinSpriteSheet.png', {frameWidth: 100, frameHeight: 100, startFrame: 0, endFrame: 3});
         this.load.audio('sfx_music', './assets/sound/sfx_music.mp3');
@@ -59,7 +64,8 @@ class Play extends Phaser.Scene {
 
         this.bgSound = this.sound.add('sfx_music', {loop: true});
         this.bgSound.play();
-
+        
+        this.trainColors = [['redEndObj', 'redMiddleObj'], ['yellowEndObj', 'yellowMiddleObj'], ['blueEndObj', 'blueMiddleObj']];
         //Systems for timer
         this.currentTime = 0;
         this.intervalTIme = 120;
@@ -98,32 +104,41 @@ class Play extends Phaser.Scene {
                 let xAdd = 0;
                 let yAdd = 0;
                 let foundTrain = true;
+                let rotation;
                 do {
                     dir = Phaser.Math.Between(0, 3);
                     foundTrain = true;
                     if(dir == 0){ //From Top
-                        xPos = this.pixelSize * Phaser.Math.Between(0, this.gridXSize - 1) + borderPadding;
-                        yPos = this.pixelSize * -1 + borderPadding;
+                        xPos = this.pixelSize * Phaser.Math.Between(0, this.gridXSize - 1) + borderPadding + 50;
+                        yPos = this.pixelSize * -1 + borderPadding + 50;
                         direction = {x: 0, y: 1};
+                        xAdd = 0;
                         yAdd = this.pixelSize * -1;
+                        rotation = -90;
                     }
                     else if(dir == 1){ //From Bottom
-                        xPos = this.pixelSize * Phaser.Math.Between(0, this.gridXSize - 1) + borderPadding;
-                        yPos = this.pixelSize * this.gridXSize + borderPadding;
+                        xPos = this.pixelSize * Phaser.Math.Between(0, this.gridXSize - 1) + borderPadding + 50;
+                        yPos = this.pixelSize * this.gridXSize + borderPadding + 50;
                         direction = {x: 0, y: -1};
+                        xAdd = 0;
                         yAdd = this.pixelSize * 1;
+                        rotation = 90;
                     }
                     else if(dir == 2){ //From Left
-                        xPos = this.pixelSize * -1 + borderPadding;
-                        yPos = this.pixelSize * Phaser.Math.Between(0, this.gridYSize - 1) + borderPadding;
+                        xPos = this.pixelSize * -1 + borderPadding + 50;
+                        yPos = this.pixelSize * Phaser.Math.Between(0, this.gridYSize - 1) + borderPadding + 50;
                         direction = {x: 1, y: 0};
                         xAdd = this.pixelSize * -1;
+                        yAdd = 0;
+                        rotation = 180;
                     }
                     else{ //From Right
-                        xPos = this.pixelSize * this.gridXSize + borderPadding;
-                        yPos = this.pixelSize * Phaser.Math.Between(0, this.gridYSize - 1) + borderPadding;
+                        xPos = this.pixelSize * this.gridXSize + borderPadding + 50;
+                        yPos = this.pixelSize * Phaser.Math.Between(0, this.gridYSize - 1) + borderPadding + 50;
                         direction = {x: -1, y: 0};
                         xAdd = this.pixelSize * 1;
+                        yAdd = 0;
+                        rotation = 0;
                     }
                     for(let currentTrain of trainArr){
                         if(dir == 0){ //from top check against bottom
@@ -154,11 +169,20 @@ class Play extends Phaser.Scene {
                     }
                     console.log("bottom of Do-while");
                 } while (!foundTrain);
-
-                newTrain = new Train(this, xPos, yPos, 'train', undefined, this.trainSpeed + rand, direction).setOrigin(0,0);
+                let trainColor = this.trainColors[Phaser.Math.Between(0, 2)];
+                newTrain = new Train(this, xPos, yPos, trainColor[0], undefined, this.trainSpeed + rand, direction).setOrigin(0.5);
+                newTrain.angle = rotation;
                 let trainSize = Phaser.Math.Between(2, 4);
-                for(let i = 1; i < trainSize; i++){
-                    let segTrain = new Train(this, xPos + (xAdd * i), yPos + (yAdd * i), 'train', undefined, this.trainSpeed + rand, direction).setOrigin(0,0);
+                for(let i = 1; i < trainSize; i++) {
+                    let segTrain
+                    if (i < trainSize - 1) {
+                        segTrain = new Train(this, xPos + (xAdd * i), yPos + (yAdd * i), trainColor[1], undefined, this.trainSpeed + rand, direction).setOrigin(0.5);
+                        segTrain.angle = rotation;
+                    }
+                    else {
+                        segTrain = new Train(this, xPos + (xAdd * i), yPos + (yAdd * i), trainColor[0], undefined, this.trainSpeed + rand, direction).setOrigin(0.5);
+                        segTrain.angle = 180 + rotation;
+                    }
                     this.trains.add(segTrain);
                 }
                 
@@ -188,10 +212,10 @@ class Play extends Phaser.Scene {
     }
 
     checkCollision(train) {
-        if (this.player.x < train.x + train.width - 25 &&
-            this.player.x + this.player.width - 25 > train.x &&
-            this.player.y < train.y + train.height - 25 &&
-            this.player.height - 25 + this.player.y > train.y) {
+        if (this.player.x < train.x - 50 + train.width - 25 &&
+            this.player.x + this.player.width - 25 > train.x - 50 &&
+            this.player.y < train.y - 50 + train.height - 25 &&
+            this.player.height - 25 + this.player.y > train.y - 50) {
                 this.sound.play('sfx_gameOver');
                 return true;
         }

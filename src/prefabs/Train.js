@@ -1,5 +1,5 @@
 class Train extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y, texture, frame, speed, direction) {
+    constructor(scene, x, y, texture, frame, speed, direction, rotation) {
         super(scene, x, y, texture, frame);
         scene.add.existing(this);
         this.moveSpeed = speed;
