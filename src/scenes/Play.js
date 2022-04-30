@@ -98,7 +98,7 @@ class Play extends Phaser.Scene {
         this.pixelSize = 100;
         this.gridXSize = 7;
         this.gridYSize = 5;
-        this.add.rectangle(0, 0, game.config.width, game.config.height, 0xd6b081).setOrigin(0, 0);
+        this.bgUI = this.add.rectangle(0, 0, game.config.width, game.config.height, 0xd6b081).setOrigin(0, 0);
         this.bg = this.add.tileSprite(borderPadding, borderPadding, this.pixelSize * this.gridXSize, this.pixelSize * this.gridYsize, 'grid').setOrigin(0,0);
 
         this.player  = new Player(this, this.pixelSize * 2 + borderPadding, this.pixelSize + borderPadding, 'player').setOrigin(0,0);
@@ -106,9 +106,10 @@ class Play extends Phaser.Scene {
         let x = Phaser.Math.Between(1,7) * 100;
         let y = Phaser.Math.Between(1,5) * 100;
         this.rotate = this.add.sprite(x, y, 'coinrotate').setOrigin(0, 0);
-        this.coin = new Coin(this, x, y, 'coin', undefined ,100000, this.rotate).setOrigin(0,0);
+        this.coin = new Coin(this, x, y, 'coinrotate', undefined ,100000, this.rotate).setOrigin(0,0);
         this.gameOver = false;
-
+        this.bgLayer = this.add.layer([this.bgUI, this.bg]);
+        this.bgLayer.setDepth(0);
         this.bgSound = this.sound.add('sfx_music', {loop: true});
         this.bgSound.play();
         
@@ -122,6 +123,10 @@ class Play extends Phaser.Scene {
         this.timer = 0;
         this.timeRight = this.add.text(game.config.width - (borderPadding*2), borderPadding * 0.5,"Score: " + Math.floor(this.timer / 1000), this.scoreConfig).setOrigin(0.5);
         this.indicateQueue = new Queue();
+        this.indicateLayer = this.add.layer();
+        this.indicateLayer.setDepth(1);
+        this.trainLayer = this.add.layer([this.player, this.rotate]);
+        this.trainLayer.setDepth(2);
     }
     
     update(time, delta) {
@@ -235,10 +240,12 @@ class Play extends Phaser.Scene {
                     indicator.anims.play(trainColor[2]);
                 }
                 this.indicateQueue.enqueue(indicator);
+                this.indicateLayer.add(indicator);
                 this.time.delayedCall(2000, () => {
                     this.indicateQueue.dequeue().destroy();
                     newTrain = new Train(this, xPos, yPos, trainColor[0], undefined, this.trainSpeed + rand, direction).setOrigin(0.5);
                     newTrain.angle = rotation;
+                    this.trainLayer.add(newTrain);
                     let trainSize = Phaser.Math.Between(2, 4);
                     for(let i = 1; i < trainSize; i++) {
                         let segTrain
@@ -251,6 +258,7 @@ class Play extends Phaser.Scene {
                             segTrain.angle = 180 + rotation;
                         }
                         this.trains.add(segTrain);
+                        this.trainLayer.add(segTrain);
                     }
                 
                     this.trains.add(newTrain);
