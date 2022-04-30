@@ -166,7 +166,7 @@ class Play extends Phaser.Scene {
                     foundTrain = true;
                     if(dir == 0){ //From Top
                         xPos = this.pixelSize * Phaser.Math.Between(0, this.gridXSize - 1) + borderPadding + 50;
-                        yPos = this.pixelSize * -1 + borderPadding + 50;
+                        yPos = this.pixelSize * -1 + borderPadding - 50;
                         direction = {x: 0, y: 1};
                         xAdd = 0;
                         yAdd = this.pixelSize * -1;
@@ -174,14 +174,14 @@ class Play extends Phaser.Scene {
                     }
                     else if(dir == 1){ //From Bottom
                         xPos = this.pixelSize * Phaser.Math.Between(0, this.gridXSize - 1) + borderPadding + 50;
-                        yPos = this.pixelSize * this.gridYSize + borderPadding + 50;
+                        yPos = this.pixelSize * this.gridYSize + borderPadding + 150;
                         direction = {x: 0, y: -1};
                         xAdd = 0;
                         yAdd = this.pixelSize * 1;
                         rotation = 90;
                     }
                     else if(dir == 2){ //From Left
-                        xPos = this.pixelSize * -1 + borderPadding + 50;
+                        xPos = this.pixelSize * -1 + borderPadding - 50;
                         yPos = this.pixelSize * Phaser.Math.Between(0, this.gridYSize - 1) + borderPadding + 50;
                         direction = {x: 1, y: 0};
                         xAdd = this.pixelSize * -1;
@@ -189,7 +189,7 @@ class Play extends Phaser.Scene {
                         rotation = 180;
                     }
                     else{ //From Right
-                        xPos = this.pixelSize * this.gridXSize + borderPadding + 50;
+                        xPos = this.pixelSize * this.gridXSize + borderPadding + 150;
                         yPos = this.pixelSize * Phaser.Math.Between(0, this.gridYSize - 1) + borderPadding + 50;
                         direction = {x: -1, y: 0};
                         xAdd = this.pixelSize * 1;
@@ -224,19 +224,19 @@ class Play extends Phaser.Scene {
                 } while (!foundTrain);
                 let indicator;
                 if(dir == 0){ //From Top
-                    indicator = this.add.sprite(xPos - 50, yPos + 50, trainColor[3]).setOrigin(0, 0);
+                    indicator = this.add.sprite(xPos - 50, yPos + 150, trainColor[3]).setOrigin(0, 0);
                     indicator.anims.play(trainColor[3]);
                 }
                 else if(dir == 1){ //From Bottom
-                    indicator = this.add.sprite(xPos - 50, yPos - 53, trainColor[3]).setOrigin(0, 0);
+                    indicator = this.add.sprite(xPos - 50, yPos - 153, trainColor[3]).setOrigin(0, 0);
                     indicator.anims.play(trainColor[3]);
                 }
                 else if(dir == 2){ //From Left
-                    indicator = this.add.sprite(xPos + 50, yPos - 50, trainColor[2]).setOrigin(0, 0);
+                    indicator = this.add.sprite(xPos + 150, yPos - 50, trainColor[2]).setOrigin(0, 0);
                     indicator.anims.play(trainColor[2]);
                 }
                 else{ //From Right
-                    indicator = this.add.sprite(xPos - 53, yPos - 50, trainColor[2]).setOrigin(0, 0);
+                    indicator = this.add.sprite(xPos - 153, yPos - 50, trainColor[2]).setOrigin(0, 0);
                     indicator.anims.play(trainColor[2]);
                 }
                 this.indicateQueue.enqueue(indicator);
@@ -245,6 +245,7 @@ class Play extends Phaser.Scene {
                     this.indicateQueue.dequeue().destroy();
                     newTrain = new Train(this, xPos, yPos, trainColor[0], undefined, this.trainSpeed + rand, direction).setOrigin(0.5);
                     newTrain.angle = rotation;
+                    newTrain.scaleX = 1.1;
                     this.trainLayer.add(newTrain);
                     let trainSize = Phaser.Math.Between(2, 4);
                     for(let i = 1; i < trainSize; i++) {
@@ -252,10 +253,12 @@ class Play extends Phaser.Scene {
                         if (i < trainSize - 1) {
                             segTrain = new Train(this, xPos + (xAdd * i), yPos + (yAdd * i), trainColor[1], undefined, this.trainSpeed + rand, direction).setOrigin(0.5);
                             segTrain.angle = rotation;
+                            segTrain.scaleX = 1.1;
                         }
                         else {
                             segTrain = new Train(this, xPos + (xAdd * i), yPos + (yAdd * i), trainColor[0], undefined, this.trainSpeed + rand, direction).setOrigin(0.5);
                             segTrain.angle = 180 + rotation;
+                            segTrain.scaleX = 1.1;
                         }
                         this.trains.add(segTrain);
                         this.trainLayer.add(segTrain);
