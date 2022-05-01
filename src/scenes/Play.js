@@ -28,10 +28,10 @@ class Play extends Phaser.Scene {
     }
     create() {
         this.scoreConfig = {
-            fontFamily: 'Courier',
+            fontFamily: 'Bahnschrift SemiBold',
             fontSize: '28px',
-            backgroundColor: '#57e1ff',
-            color: '#843605',
+            backgroundColor: '#ffffff',
+            color: '#000000',
             align: 'right',
             padding: {
                 top: 5,
@@ -127,6 +127,8 @@ class Play extends Phaser.Scene {
         this.indicateLayer.setDepth(1);
         this.trainLayer = this.add.layer([this.player, this.rotate]);
         this.trainLayer.setDepth(2);
+        this.wordLayer = this.add.layer(this.timeRight);
+        this.wordLayer.setDepth(3);
     }
     
     update(time, delta) {
@@ -267,7 +269,7 @@ class Play extends Phaser.Scene {
                     this.trains.add(newTrain);
                 });
                 this.currentTime = 0;
-                if(this.intervalTime > 30){
+                if(this.intervalTime > 50){
                     this.intervalTime -= 1;
                 }
                 if(this.trainSpeed < 5){
@@ -277,8 +279,8 @@ class Play extends Phaser.Scene {
 
         }
         else {
-            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', this.scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', this.scoreConfig).setOrigin(0.5);
+            this.wordLayer.add(this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', this.scoreConfig).setOrigin(0.5));
+            this.wordLayer.add(this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', this.scoreConfig)).setOrigin(0.5);
             this.bgSound.stop();
             this.gameOver = true;
         }
