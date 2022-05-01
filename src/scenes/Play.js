@@ -101,7 +101,7 @@ class Play extends Phaser.Scene {
         this.bgUI = this.add.rectangle(0, 0, game.config.width, game.config.height, 0xd6b081).setOrigin(0, 0);
         this.bg = this.add.tileSprite(borderPadding, borderPadding, this.pixelSize * this.gridXSize, this.pixelSize * this.gridYsize, 'grid').setOrigin(0,0);
 
-        this.player  = new Player(this, this.pixelSize * 2 + borderPadding, this.pixelSize + borderPadding, 'player').setOrigin(0,0);
+        this.player  = new Player(this, this.pixelSize * 2.5 + borderPadding, this.pixelSize * 1.5 + borderPadding, 'player').setOrigin(0.5,0.5);
         this.trains = this.add.group();
         let x = Phaser.Math.Between(1,7) * 100;
         let y = Phaser.Math.Between(1,5) * 100;
@@ -292,11 +292,13 @@ class Play extends Phaser.Scene {
         }
     }
 
+
+    
     checkCollision(train) {
-        if (this.player.x < train.x - 50 + train.width - 25 &&
-            this.player.x + this.player.width - 25 > train.x - 50 &&
-            this.player.y < train.y - 50 + train.height - 25 &&
-            this.player.height - 25 + this.player.y > train.y - 50) {
+        if (this.player.x - 50 < train.x - 50 + train.width - 25 &&
+            this.player.x - 50 + this.player.width - 25 > train.x - 50 &&
+            this.player.y - 50 < train.y - 50 + train.height - 25 &&
+            this.player.height - 75 + this.player.y - 50> train.y - 50) {
                 this.sound.play('sfx_gameOver');
                 return true;
         }
@@ -306,10 +308,10 @@ class Play extends Phaser.Scene {
     }
 
     checkCollisionCoin(coin) {
-        if (this.player.x < coin.x + coin.width - 25 &&
-            this.player.x + this.player.width - 25 > coin.x &&
-            this.player.y < coin.y + coin.height - 25 &&
-            this.player.height - 25 + this.player.y > coin.y) {
+        if (this.player.x - 50< coin.x + coin.width - 25 &&
+            this.player.x - 50 + this.player.width - 25 > coin.x &&
+            this.player.y - 50< coin.y + coin.height - 25 &&
+            this.player.height - 75 + this.player.y - 50> coin.y) {
                 this.timer += coin.scoreValue;
                 if(this.player.x >= 400){
                     coin.x = Phaser.Math.Between(1,3) * 100;
