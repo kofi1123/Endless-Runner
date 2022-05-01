@@ -1,10 +1,10 @@
 
-console.log("Hello from main.js");
+//console.log("Hello from main.js");
 let config = {
     type: Phaser.CANVAS,
     width: 900,
     height: 700,
-    scene: [Menu, Play],
+    scene: [Menu, Play, GameOver],
     fps: {
         target: 60,
         forceSetTimeOut: true

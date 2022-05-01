@@ -277,17 +277,16 @@ class Play extends Phaser.Scene {
 
         }
         else {
-            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', this.scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', this.scoreConfig).setOrigin(0.5);
-            this.bgSound.stop();
-            this.gameOver = true;
+            this.scene.start("game over");   
         }
+        /*
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start("menu");
         }
+        */
     }
 
     checkCollision(train) {
