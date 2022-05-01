@@ -38,7 +38,7 @@ class Play extends Phaser.Scene {
                 bottom: 5,
             },
         }
-
+        
         this.anims.create({
             key: 'coinrotate',
             frames: this.anims.generateFrameNumbers('coinrotate', {start: 0, end: 3, first: 0}),
@@ -279,7 +279,9 @@ class Play extends Phaser.Scene {
 
         }
         else {
-            this.scene.start("game over");
+            console.log("timer = " + this.timer);
+            this.bgSound.pause();
+            this.scene.start("game over", this.timer);
         }
         /*
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {

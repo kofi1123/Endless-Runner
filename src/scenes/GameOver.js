@@ -3,25 +3,26 @@ class GameOver extends Phaser.Scene {
         super("game over");
     }
 
-    preload(){
-   
+    init(score){
+        this.displayScore = Math.floor(score);
+    }
+
+    preload() {
+        this.load.image('gameOverBackground', './assets/images/GameOver.png');
+        this.load.audio('sfx_menuClick', './assets/sound/sfx_menuClick.mp3');
     }
 
     create(){
-        let menuConfig = {
-            fontFamily: 'Courier',
-            fontSize: '28px',
-            backgroundColor: '#57e1ff',
-            color: '#843605',
-            align: 'right',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-            fixedWidth: 0
-        }
+         
+        this.scoreDisplay = this.add.text(350, 525, this.displayScore, {fontFamily: 'Bahnschrift SemiBold',
+        fontSize: '100px', color: '#000000' });
+        console.log("displayScore = " + this.displayScore, );
+        this.bg = this.add.image(0, 0, 'gameOverBackground').setOrigin(0, 0);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+        this.scoreDisplay.depth = 1;
+
+        //this.bg.add(this.scoreDisplay);
     }
 
     update(){
