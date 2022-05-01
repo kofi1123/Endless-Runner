@@ -38,7 +38,7 @@ class Play extends Phaser.Scene {
                 bottom: 5,
             },
         }
-
+        
         this.anims.create({
             key: 'coinrotate',
             frames: this.anims.generateFrameNumbers('coinrotate', {start: 0, end: 3, first: 0}),
@@ -279,17 +279,18 @@ class Play extends Phaser.Scene {
 
         }
         else {
-            this.wordLayer.add(this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', this.scoreConfig).setOrigin(0.5));
-            this.wordLayer.add(this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', this.scoreConfig)).setOrigin(0.5);
-            this.bgSound.stop();
-            this.gameOver = true;
+            console.log("timer = " + this.timer);
+            this.bgSound.pause();
+            this.scene.start("game over", this.timer);
         }
+        /*
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start("menu");
         }
+        */
     }
 
     checkCollision(train) {
