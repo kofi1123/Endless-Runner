@@ -11,6 +11,8 @@ class Play extends Phaser.Scene {
         this.load.image('blueMiddleObj', './assets/images/blueMiddleObj.png');
         this.load.image('yellowEndObj', './assets/images/yellowEndObj.png');
         this.load.image('yellowMiddleObj', './assets/images/yellowMiddleObj.png');
+        this.load.image('coinSpark', 'assets/images/coinPart.png');
+        this.load.image('deathSpark', 'assets/images/plrPart.png');
         this.load.spritesheet('redTrainIndicatorV', './assets/images/redTrainIndicatorV.png', {frameWidth: 3, frameHeight: 100, startFrame: 0, endFrame: 9});
         this.load.spritesheet('redTrainIndicatorH', './assets/images/redTrainIndicatorH.png', {frameWidth: 100, frameHeight: 3, startFrame: 0, endFrame: 9});
         this.load.spritesheet('blueTrainIndicatorV', './assets/images/blueTrainIndicatorV.png', {frameWidth: 3, frameHeight: 100, startFrame: 0, endFrame: 9});
@@ -101,7 +103,8 @@ class Play extends Phaser.Scene {
         this.bgUI = this.add.rectangle(0, 0, game.config.width, game.config.height, 0xd6b081).setOrigin(0, 0);
         this.bg = this.add.tileSprite(borderPadding, borderPadding, this.pixelSize * this.gridXSize, this.pixelSize * this.gridYsize, 'grid').setOrigin(0,0);
 
-        this.player  = new Player(this, this.pixelSize * 2 + borderPadding, this.pixelSize + borderPadding, 'player').setOrigin(0,0);
+
+        this.player  = new Player(this, this.pixelSize * 2.5 + borderPadding, this.pixelSize * 1.5 + borderPadding, 'player').setOrigin(0.5,0.5);
         this.trains = this.add.group();
         let x = Phaser.Math.Between(1,7) * 100;
         let y = Phaser.Math.Between(1,5) * 100;
@@ -113,6 +116,32 @@ class Play extends Phaser.Scene {
         this.bgSound = this.sound.add('sfx_music', {loop: true});
         this.bgSound.play();
         
+        //Particles 
+        this.coinEmitter = this.add.particles('coinSpark').createEmitter({
+            x: 400,
+            y: 300,
+            speed: { min: -800, max: 800 },
+            angle: { min: 0, max: 360 },
+            scale: { start: 0.5, end: 0 },
+            //blendMode: 'SCREEN',
+            //active: false,
+            lifespan: 500,
+            frequency: -1,
+            quantity: 50
+        }); 
+
+        this.deathEmitter = this.add.particles('plrSpark').createEmitter({
+            x: 400,
+            y: 300,
+            speed: { min: -600, max: 600 },
+            angle: { min: 0, max: 360 },
+            scale: { start: 0.5, end: 0 },
+            //blendMode: 'SCREEN',
+            //active: false,
+            lifespan: 2000,
+            frequency: -1,
+            quantity: 100
+        }); 
         this.trainColors = [['redEndObj', 'redMiddleObj', 'redTrainIndicatorV', 'redTrainIndicatorH'],
             ['yellowEndObj', 'yellowMiddleObj', 'yellowTrainIndicatorV', 'yellowTrainIndicatorH'],
             ['blueEndObj', 'blueMiddleObj', 'blueTrainIndicatorV', 'blueTrainIndicatorH']];
@@ -294,11 +323,13 @@ class Play extends Phaser.Scene {
     }
 
     checkCollision(train) {
-        if (this.player.x < train.x - 50 + train.width - 25 &&
-            this.player.x + this.player.width - 25 > train.x - 50 &&
-            this.player.y < train.y - 50 + train.height - 25 &&
-            this.player.height - 25 + this.player.y > train.y - 50) {
+        if (this.player.x - 50 < train.x - 50 + train.width - 25 &&
+            this.player.x - 50 + this.player.width - 25 > train.x - 50 &&
+            this.player.y - 50 < train.y - 50 + train.height - 25 &&
+            this.player.height - 75 + this.player.y - 50> train.y - 50) {
                 this.sound.play('sfx_gameOver');
+                this.deathEmitter.setPosition(this.player.x, this.player.y);
+                this.deathEmitter.explode();
                 return true;
         }
         else {
@@ -307,10 +338,10 @@ class Play extends Phaser.Scene {
     }
 
     checkCollisionCoin(coin) {
-        if (this.player.x < coin.x + coin.width - 25 &&
-            this.player.x + this.player.width - 25 > coin.x &&
-            this.player.y < coin.y + coin.height - 25 &&
-            this.player.height - 25 + this.player.y > coin.y) {
+        if (this.player.x - 50< coin.x + coin.width - 25 &&
+            this.player.x - 50 + this.player.width - 25 > coin.x &&
+            this.player.y - 50< coin.y + coin.height - 25 &&
+            this.player.height - 75 + this.player.y - 50> coin.y) {
                 this.timer += coin.scoreValue;
                 if(this.player.x >= 400){
                     coin.x = Phaser.Math.Between(1,3) * 100;
@@ -325,6 +356,8 @@ class Play extends Phaser.Scene {
                 coin.animation.x = coin.x;
                 coin.animation.y = coin.y;
                 this.sound.play('sfx_coin');
+                this.coinEmitter.setPosition(this.player.x, this.player.y);
+                this.coinEmitter.explode();
                 return true;
         }
         else {
