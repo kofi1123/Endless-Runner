@@ -44,7 +44,8 @@ Dat Completed:  5/1/2022
 - The criterea for:
     Simulate scrolling with a tileSprite or equivalent means (5)
     Isn't included in this project, due to the naeture of the game. The game takes place in a
-    stationary space, therefore scrolling wouldn't be appropriate for this project.
+    stationary space, therefore scrolling wouldn't be appropriate for this project. Therefore, I believe
+    these points shouldnt' be deducted from this projet.
 
 
 
