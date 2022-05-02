@@ -17,18 +17,22 @@ class Player extends Phaser.GameObjects.Sprite {
             this.x -= this.moveSpeed;
             this.scale = this.squishScale;
             this.squishTween = this.initTween;
+            this.scene.sound.play('sfx_playerMoveLeft');
         } else if(Phaser.Input.Keyboard.JustDown(keyRIGHT) && this.x < game.config.width - borderPadding * 2) {
             this.x += this.moveSpeed; 
             this.scale = this.squishScale;
             this.squishTween = this.initTween;
-        } else if(Phaser.Input.Keyboard.JustDown(keyUP) && this.y > borderPadding){
+            this.scene.sound.play('sfx_playerMoveRight');
+        } else if(Phaser.Input.Keyboard.JustDown(keyUP) && this.y > borderPadding + 100){
             this.y -= this.moveSpeed; 
             this.scale = this.squishScale;
             this.squishTween = this.initTween;
+            this.scene.sound.play('sfx_playerMoveUp');
         } else if(Phaser.Input.Keyboard.JustDown(keyDOWN) && this.y < game.config.height - borderPadding * 2) {
             this.y += this.moveSpeed;
             this.scale = this.squishScale;
             this.squishTween = this.initTween;
+            this.scene.sound.play('sfx_playerMoveDown');
         }
 
         if(this.scale > 1){
